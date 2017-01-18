@@ -16,7 +16,7 @@ Then Import the project in Android Studio
 
 An API Key from TheMovieDB service is needed to use this application, please refer to the official api faq here: https://www.themoviedb.org/faq/api
 
-Insert your API Key in the file: TBA
+Insert your API Key in the Class: [NetworkUtilities.java](app/src/main/java/com/gbozza/android/popularmovies/utilities/NetworkUtilities.java)
 
 ## Authors
 
