@@ -1,37 +1,47 @@
 package com.gbozza.android.popularmovies;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 /**
- * Created by gianpiero.bozza on 17-Jan-17.
+ * Adapter to manage the RecyclerView in the Main Activity
  */
+class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
-
-    // TODO change according to the TheMovieDB return object
-    private Object[] mPopularMovies;
+    private List<Movie> mMovieList;
 
     private final MoviesAdapterOnClickHandler mClickHandler;
 
-    public interface MoviesAdapterOnClickHandler {
+    interface MoviesAdapterOnClickHandler {
         void onClick(String clickedItem);
     }
 
-    public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
+    MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }
 
-    public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public final ImageView mMoviePosterView;
+    class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final CardView mPopularMovieCardView;
+        final ImageView mMoviePosterImageView;
+        final TextView mMovieTitleTextView;
+        Context mContext;
 
-        public MoviesAdapterViewHolder(View view) {
+        MoviesAdapterViewHolder(View view) {
             super(view);
-            mMoviePosterView = (ImageView) view.findViewById(R.id.iv_movie_poster);
+            mPopularMovieCardView = (CardView) view.findViewById(R.id.cv_popular_movie);
+            mMoviePosterImageView = (ImageView) view.findViewById(R.id.iv_movie_poster);
+            mMovieTitleTextView = (TextView) view.findViewById(R.id.tv_movie_title);
+            mContext = view.getContext();
             view.setOnClickListener(this);
         }
 
@@ -46,7 +56,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     @Override
     public MoviesAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         Context context = viewGroup.getContext();
-        int layoutIdForListItem = R.layout.movies_grid_layout;
+        int layoutIdForListItem = R.layout.popular_movies_card;
         LayoutInflater inflater = LayoutInflater.from(context);
         boolean shouldAttachToParentImmediately = false;
 
@@ -56,20 +66,22 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder moviesAdapterViewHolder, int position) {
-        // TODO get the poster at the specified position and assign it to the ImageView
-        // pseudo code: Image poster = mPopularMovies[position];
-        //moviesAdapterViewHolder.mMoviePosterView.setImage(poster);
+        Movie movie = mMovieList.get(position);
+        moviesAdapterViewHolder.mMovieTitleTextView.setText(movie.getOriginalTitle());
+
+        Picasso.with(moviesAdapterViewHolder.mContext)
+                .load(movie.buildPosterPath())
+                .into(moviesAdapterViewHolder.mMoviePosterImageView);
     }
 
     @Override
     public int getItemCount() {
-        // TODO change according to the TheMovieDB return object
-        if (null == mPopularMovies) return 0;
-        return mPopularMovies.length;
+        if (null == mMovieList) return 0;
+        return mMovieList.size();
     }
 
-    public void setMoviesData(Object[] moviesData) {
-        mPopularMovies = moviesData;
+    void setMoviesData(List<Movie> movieList) {
+        mMovieList = movieList;
         notifyDataSetChanged();
     }
 }
