@@ -2,7 +2,7 @@ package com.gbozza.android.popularmovies.utilities;
 
 import android.util.Log;
 
-import com.gbozza.android.popularmovies.Movie;
+import com.gbozza.android.popularmovies.models.Movie;
 
 import org.json.JSONArray;
 import org.json.JSONException;

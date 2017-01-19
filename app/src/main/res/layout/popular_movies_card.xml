@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="5dp"
-        card_view:cardCornerRadius="0dp">
+        card_view:cardCornerRadius="20dp">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -32,7 +32,8 @@
                 android:layout_below="@id/iv_movie_poster"
                 android:padding="10dp"
                 android:textColor="#4c4c4c"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textAlignment="center" />
 
         </RelativeLayout>
 

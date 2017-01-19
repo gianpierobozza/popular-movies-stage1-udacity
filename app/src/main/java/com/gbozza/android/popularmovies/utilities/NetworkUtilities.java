@@ -18,13 +18,12 @@ public final class NetworkUtilities {
 
     // TODO IMPORTANT: Substitute the actual key before submit with <your_api_key>
     private static final String MOVIEDB_API_KEY = "<your_api_key>";
-
     private static final String MOVIEDB_API_KEY_QUERY_PARAM = "api_key";
-
-    private static final String MOVIEDB_API_URL =
-            "https://api.themoviedb.org/3";
-
-    private static final String MOVIEDB_METHOD_POPULARMOVIES = "/movie/popular";
+    private static final String MOVIEDB_LANGUAGE_QUERY_PARAM = "language";
+    private static final String MOVIEDB_PAGE_QUERY_PARAM = "page";
+    private static final String MOVIEDB_API_URL = "https://api.themoviedb.org/3";
+    private static final String MOVIEDB_METHOD_POPULAR = "/movie/popular";
+    private static final String MOVIEDB_METHOD_RATED = "/movie/top_rated";
 
     private static final String TAG = NetworkUtilities.class.getSimpleName();
 
@@ -85,7 +84,17 @@ public final class NetworkUtilities {
         }
     }
 
-    public static String getMoviedbMethodPopularmovies() {
-        return MOVIEDB_METHOD_POPULARMOVIES;
+    public static String getMoviedbLanguageQueryParam() { return MOVIEDB_LANGUAGE_QUERY_PARAM; }
+
+    public static String getMoviedbPageQueryParam() {
+        return MOVIEDB_PAGE_QUERY_PARAM;
+    }
+
+    public static String getMoviedbMethodPopular() {
+        return MOVIEDB_METHOD_POPULAR;
+    }
+
+    public static String getMoviedbMethodRated() {
+        return MOVIEDB_METHOD_RATED;
     }
 }

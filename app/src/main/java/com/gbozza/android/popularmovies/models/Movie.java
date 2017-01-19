@@ -1,4 +1,4 @@
-package com.gbozza.android.popularmovies;
+package com.gbozza.android.popularmovies.models;
 
 /**
  * Object representing a Movie, an entry from the MovieDB API
@@ -28,7 +28,7 @@ public class Movie {
         this.voteAverage = voteAverage;
     }
 
-    String buildPosterPath() {
+    public String buildPosterPath() {
         return MOVIEDB_POSTER_IMG_URL + MOVIEDB_POSTER_WIDHT_W342 + getPosterPath();
     }
 

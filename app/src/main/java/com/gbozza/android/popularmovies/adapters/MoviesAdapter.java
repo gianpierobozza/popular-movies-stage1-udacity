@@ -1,4 +1,4 @@
-package com.gbozza.android.popularmovies;
+package com.gbozza.android.popularmovies.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.CardView;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gbozza.android.popularmovies.R;
+import com.gbozza.android.popularmovies.models.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -16,17 +18,17 @@ import java.util.List;
 /**
  * Adapter to manage the RecyclerView in the Main Activity
  */
-class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
+public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
     private List<Movie> mMovieList;
 
     private final MoviesAdapterOnClickHandler mClickHandler;
 
-    interface MoviesAdapterOnClickHandler {
+    public interface MoviesAdapterOnClickHandler {
         void onClick(String clickedItem);
     }
 
-    MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
+    public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }
 
@@ -67,11 +69,10 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterView
     @Override
     public void onBindViewHolder(MoviesAdapterViewHolder moviesAdapterViewHolder, int position) {
         Movie movie = mMovieList.get(position);
-        moviesAdapterViewHolder.mMovieTitleTextView.setText(movie.getOriginalTitle());
-
         Picasso.with(moviesAdapterViewHolder.mContext)
                 .load(movie.buildPosterPath())
                 .into(moviesAdapterViewHolder.mMoviePosterImageView);
+        moviesAdapterViewHolder.mMovieTitleTextView.setText(movie.getOriginalTitle());
     }
 
     @Override
@@ -80,8 +81,17 @@ class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterView
         return mMovieList.size();
     }
 
-    void setMoviesData(List<Movie> movieList) {
-        mMovieList = movieList;
+    public void clear() {
+        mMovieList.clear();
+        notifyDataSetChanged();
+    }
+
+    public void setMoviesData(List<Movie> movieList) {
+        if (null == mMovieList) {
+            mMovieList = movieList;
+        } else {
+            mMovieList.addAll(movieList);
+        }
         notifyDataSetChanged();
     }
 }
