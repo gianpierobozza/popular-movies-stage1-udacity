@@ -22,17 +22,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     private List<Movie> mMovieList;
 
-    private final MoviesAdapterOnClickHandler mClickHandler;
-
-    public interface MoviesAdapterOnClickHandler {
-        void onClick(String clickedItem);
-    }
-
-    public MoviesAdapter(MoviesAdapterOnClickHandler clickHandler) {
-        mClickHandler = clickHandler;
-    }
-
-    class MoviesAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
         final CardView mPopularMovieCardView;
         final ImageView mMoviePosterImageView;
         final TextView mMovieTitleTextView;
@@ -44,14 +34,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
             mMoviePosterImageView = (ImageView) view.findViewById(R.id.iv_movie_poster);
             mMovieTitleTextView = (TextView) view.findViewById(R.id.tv_movie_title);
             mContext = view.getContext();
-            view.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            int adapterPosition = getAdapterPosition();
-            // TODO get the id of the clicked movie poster: String movieId = mData[adapterPosition];
-            // mClickHandler.onClick(movieId);
         }
     }
 
