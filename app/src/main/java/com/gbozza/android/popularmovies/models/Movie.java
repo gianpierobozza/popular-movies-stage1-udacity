@@ -1,9 +1,12 @@
 package com.gbozza.android.popularmovies.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Object representing a Movie, an entry from the MovieDB API
  */
-public class Movie {
+public class Movie implements Parcelable {
     private int id;
     private String posterPath;
     private String overview;
@@ -15,9 +18,6 @@ public class Movie {
     private static final String MOVIEDB_POSTER_WIDHT_W185 = "w185";
     private static final String MOVIEDB_POSTER_WIDHT_W342 = "w342";
 
-    public Movie() {
-    }
-
     public Movie(int id, String posterPath, String overview, String originalTitle,
                  String popularity, String voteAverage) {
         this.id = id;
@@ -28,9 +28,46 @@ public class Movie {
         this.voteAverage = voteAverage;
     }
 
+    private Movie(Parcel parcel) {
+        id = parcel.readInt();
+        posterPath = parcel.readString();
+        overview = parcel.readString();
+        originalTitle = parcel.readString();
+        popularity = parcel.readString();
+        voteAverage = parcel.readString();
+    }
+
     public String buildPosterPath() {
         return MOVIEDB_POSTER_IMG_URL + MOVIEDB_POSTER_WIDHT_W342 + getPosterPath();
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeInt(id);
+        parcel.writeString(posterPath);
+        parcel.writeString(overview);
+        parcel.writeString(originalTitle);
+        parcel.writeString(popularity);
+        parcel.writeString(voteAverage);
+    }
+
+    public final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel parcel) {
+            return new Movie(parcel);
+        }
+
+        @Override
+        public Movie[] newArray(int i) {
+            return new Movie[i];
+        }
+
+    };
 
     public int getId() {
         return id;

@@ -7,10 +7,10 @@
     tools:context="com.gbozza.android.popularmovies.MainActivity">
 
     <fragment
-        android:name="com.gbozza.android.popularmovies.MovieListFragment"
+        android:name="com.gbozza.android.popularmovies.fragments.MovieListFragment"
         android:id="@+id/f_movie_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/movie_list_fragment"/>
+        tools:layout="@layout/movie_list_fragment" />
 
 </FrameLayout>
