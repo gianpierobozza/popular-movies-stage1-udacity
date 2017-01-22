@@ -1,6 +1,7 @@
 package com.gbozza.android.popularmovies.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.gbozza.android.popularmovies.MovieDetailActivity;
 import com.gbozza.android.popularmovies.R;
 import com.gbozza.android.popularmovies.models.Movie;
 import com.squareup.picasso.Picasso;
@@ -21,6 +23,8 @@ import java.util.List;
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdapterViewHolder> {
 
     private List<Movie> mMovieList;
+
+    private static final String INTENT_MOVIE_KEY = "movieObject";
 
     class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
         final CardView mPopularMovieCardView;
@@ -55,6 +59,19 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
                 .load(movie.buildPosterPath(moviesAdapterViewHolder.mContext))
                 .into(moviesAdapterViewHolder.mMoviePosterImageView);
         moviesAdapterViewHolder.mMovieTitleTextView.setText(movie.getOriginalTitle());
+
+        moviesAdapterViewHolder.mPopularMovieCardView.setTag(R.id.card_view_item, position);
+
+        moviesAdapterViewHolder.mPopularMovieCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Class destinationClass = MovieDetailActivity.class;
+                Intent movieDetailIntent = new Intent(view.getContext(), destinationClass);
+                int position = (int) view.getTag(R.id.card_view_item);
+                movieDetailIntent.putExtra(INTENT_MOVIE_KEY, mMovieList.get(position));
+                view.getContext().startActivity(movieDetailIntent);
+            }
+        });
     }
 
     @Override

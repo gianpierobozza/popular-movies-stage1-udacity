@@ -66,11 +66,14 @@ public class MovieListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Boolean errorShown = false;
+        Log.d(TAG, "load?");
         if (savedInstanceState != null) {
             errorShown = savedInstanceState.getBoolean(BUNDLE_ERROR_KEY);
         }
+        Log.d(TAG, "onCreateView savedInstanceState is null? "+String.valueOf(savedInstanceState == null));
 
         if (savedInstanceState != null && !errorShown) {
+            Log.d(TAG, "load");
             mPage = savedInstanceState.getInt(BUNDLE_PAGE_KEY);
             mSorting = savedInstanceState.getInt(BUNDLE_SORTING_KEY);
         } else {
@@ -127,8 +130,10 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d(TAG, "save?");
         List<Movie> movieList = mMoviesAdapter.getMoviesData();
         if (movieList != null) {
+            Log.d(TAG, "save");
             ArrayList<Movie> movieArrayList = new ArrayList<>(mMoviesAdapter.getMoviesData());
             outState.putParcelableArrayList(BUNDLE_MOVIES_KEY, movieArrayList);
             outState.putInt(BUNDLE_PAGE_KEY, mPage);
@@ -211,6 +216,7 @@ public class MovieListFragment extends Fragment {
                 mMoviesAdapter.setMoviesData(movieList);
                 mErrorMessageDisplay.setVisibility(View.INVISIBLE);
             } else {
+
                 showErrorMessage(R.string.error_moviedb_list);
             }
             mSwipeContainer.setRefreshing(false);
