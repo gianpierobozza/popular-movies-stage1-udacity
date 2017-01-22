@@ -16,11 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.gbozza.android.popularmovies.R;
 import com.gbozza.android.popularmovies.adapters.MoviesAdapter;
 import com.gbozza.android.popularmovies.models.Movie;
-import com.gbozza.android.popularmovies.utilities.EndlessRecyclerViewScrollListener;
+import com.gbozza.android.popularmovies.utilities.BottomRecyclerViewScrollListener;
 import com.gbozza.android.popularmovies.utilities.MovieDbJsonUtilities;
 import com.gbozza.android.popularmovies.utilities.NetworkUtilities;
 
@@ -34,10 +35,12 @@ import java.util.Map;
 
 public class MovieListFragment extends Fragment {
 
+    private Context mContext;
     private MoviesAdapter mMoviesAdapter;
     private ProgressBar mLoadingIndicator;
-    private EndlessRecyclerViewScrollListener mScrollListener;
+    private BottomRecyclerViewScrollListener mScrollListener;
     private SwipeRefreshLayout mSwipeContainer;
+    private TextView mErrorMessageDisplay;
     private int mPage;
     private int mSorting;
 
@@ -46,10 +49,12 @@ public class MovieListFragment extends Fragment {
     private static final String BUNDLE_MOVIES_KEY = "movieList";
     private static final String BUNDLE_PAGE_KEY = "currentPage";
     private static final String BUNDLE_SORTING_KEY = "currentSorting";
+    private static final String BUNDLE_ERROR_KEY = "errorShown";
 
     private static final String TAG = MovieListFragment.class.getSimpleName();
 
-    public MovieListFragment() {}
+    public MovieListFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,7 +65,12 @@ public class MovieListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Boolean errorShown = false;
         if (savedInstanceState != null) {
+            errorShown = savedInstanceState.getBoolean(BUNDLE_ERROR_KEY);
+        }
+
+        if (savedInstanceState != null && !errorShown) {
             mPage = savedInstanceState.getInt(BUNDLE_PAGE_KEY);
             mSorting = savedInstanceState.getInt(BUNDLE_SORTING_KEY);
         } else {
@@ -70,9 +80,9 @@ public class MovieListFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.movie_list_fragment, container, false);
 
-        Context context = getContext();
+        mContext = getContext();
         final int columns = getResources().getInteger(R.integer.grid_columns);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(context, columns, GridLayoutManager.VERTICAL, false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, columns, GridLayoutManager.VERTICAL, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.rv_posters);
         recyclerView.setLayoutManager(gridLayoutManager);
 
@@ -81,7 +91,7 @@ public class MovieListFragment extends Fragment {
         recyclerView.setAdapter(mMoviesAdapter);
 
         mLoadingIndicator = (ProgressBar) rootView.findViewById(R.id.pb_loading_indicator);
-        mScrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager, mPage) {
+        mScrollListener = new BottomRecyclerViewScrollListener(gridLayoutManager, mPage) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Log.d(TAG, "Loading page: " + String.valueOf(page));
@@ -95,17 +105,19 @@ public class MovieListFragment extends Fragment {
         mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mErrorMessageDisplay.setVisibility(View.INVISIBLE);
                 clearCardView();
                 loadCards(mSorting);
             }
         });
         mSwipeContainer.setColorSchemeResources(R.color.colorAccent);
 
-        if (savedInstanceState != null) {
+        mErrorMessageDisplay = (TextView) rootView.findViewById(R.id.tv_error_message_display);
+
+        if (savedInstanceState != null && !errorShown) {
             ArrayList<Movie> movieList = savedInstanceState.getParcelableArrayList(BUNDLE_MOVIES_KEY);
             mMoviesAdapter.setMoviesData(movieList);
-        }
-        else {
+        } else {
             loadCards(mSorting);
         }
 
@@ -115,33 +127,52 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        ArrayList<Movie> movieList = new ArrayList<>(mMoviesAdapter.getMoviesData());
-        outState.putParcelableArrayList(BUNDLE_MOVIES_KEY, movieList);
-        outState.putInt(BUNDLE_PAGE_KEY, mPage);
-        outState.putInt(BUNDLE_SORTING_KEY, mSorting);
+        List<Movie> movieList = mMoviesAdapter.getMoviesData();
+        if (movieList != null) {
+            ArrayList<Movie> movieArrayList = new ArrayList<>(mMoviesAdapter.getMoviesData());
+            outState.putParcelableArrayList(BUNDLE_MOVIES_KEY, movieArrayList);
+            outState.putInt(BUNDLE_PAGE_KEY, mPage);
+            outState.putInt(BUNDLE_SORTING_KEY, mSorting);
+        } else {
+            if (mErrorMessageDisplay.isShown()) {
+                outState.putBoolean(BUNDLE_ERROR_KEY, true);
+            }
+        }
     }
 
     public void loadCards(int sorting) {
-        String method;
-        switch (sorting) {
-            case SORTING_POPULAR:
-                method = NetworkUtilities.getMoviedbMethodPopular();
-                break;
-            case SORTING_RATED:
-                method = NetworkUtilities.getMoviedbMethodRated();
-                break;
-            default:
-                method = NetworkUtilities.getMoviedbMethodPopular();
-                break;
+        if (NetworkUtilities.isOnline(mContext)) {
+            String method;
+            switch (sorting) {
+                case SORTING_POPULAR:
+                    method = NetworkUtilities.getMoviedbMethodPopular();
+                    break;
+                case SORTING_RATED:
+                    method = NetworkUtilities.getMoviedbMethodRated();
+                    break;
+                default:
+                    method = NetworkUtilities.getMoviedbMethodPopular();
+                    break;
+            }
+            String[] posters = new String[]{method};
+            new FetchFromMovieDbTask().execute(posters);
+        } else {
+            showErrorMessage(R.string.error_no_connectivity);
+            if (mSwipeContainer.isRefreshing()) {
+                mSwipeContainer.setRefreshing(false);
+            }
         }
-        String[] posters = new String[]{ method };
-        new FetchFromMovieDbTask().execute(posters);
     }
 
     public void clearCardView() {
         mScrollListener.resetState();
         mPage = 1;
         mMoviesAdapter.clear();
+    }
+
+    private void showErrorMessage(int messageId) {
+        mErrorMessageDisplay.setText(getResources().getText(messageId));
+        mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
     public class FetchFromMovieDbTask extends AsyncTask<String[], Void, List<Movie>> {
@@ -178,11 +209,11 @@ public class MovieListFragment extends Fragment {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (movieList != null) {
                 mMoviesAdapter.setMoviesData(movieList);
-                mSwipeContainer.setRefreshing(false);
+                mErrorMessageDisplay.setVisibility(View.INVISIBLE);
             } else {
-                // TODO show error message
-                //showErrorMessage();
+                showErrorMessage(R.string.error_moviedb_list);
             }
+            mSwipeContainer.setRefreshing(false);
         }
     }
 

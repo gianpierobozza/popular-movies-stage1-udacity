@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="card_view_text_size">16sp</dimen>
+
+    <integer name="grid_columns">2</integer>
+
+    <string name="poster_size">w92</string>
+</resources>

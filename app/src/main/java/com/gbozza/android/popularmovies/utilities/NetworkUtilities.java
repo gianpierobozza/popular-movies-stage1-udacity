@@ -1,5 +1,8 @@
 package com.gbozza.android.popularmovies.utilities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.Log;
 
@@ -26,6 +29,13 @@ public final class NetworkUtilities {
     private static final String MOVIEDB_METHOD_RATED = "/movie/top_rated";
 
     private static final String TAG = NetworkUtilities.class.getSimpleName();
+
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
 
     /**
      * Builds the URL based on method string and a Map of key-value parameters

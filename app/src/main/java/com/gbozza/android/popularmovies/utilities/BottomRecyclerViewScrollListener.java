@@ -3,22 +3,16 @@ package com.gbozza.android.popularmovies.utilities;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
-    // The minimum amount of items to have below your current scroll position
-    // before loading more.
+public abstract class BottomRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     private int mVisibleThreshold = 3;
-    // The current offset index of data you have loaded
     private int mCurrentPage;
-    // The total number of items in the dataset after the last load
     private int mPreviousTotalItemCount = 0;
-    // True if we are still waiting for the last set of data to load.
     private boolean mLoading = true;
-    // Sets the starting page index
     private int mStartingPageIndex = 1;
 
     private RecyclerView.LayoutManager mLayoutManager;
 
-    protected EndlessRecyclerViewScrollListener(GridLayoutManager layoutManager, int page) {
+    protected BottomRecyclerViewScrollListener(GridLayoutManager layoutManager, int page) {
         this.mLayoutManager = layoutManager;
         mVisibleThreshold = mVisibleThreshold * layoutManager.getSpanCount();
         mCurrentPage = page;

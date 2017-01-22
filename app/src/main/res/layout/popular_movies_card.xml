@@ -32,7 +32,7 @@
                 android:layout_below="@id/iv_movie_poster"
                 android:padding="10dp"
                 android:textColor="#4c4c4c"
-                android:textSize="14sp"
+                android:textSize="@dimen/card_view_text_size"
                 android:textAlignment="center" />
 
         </RelativeLayout>

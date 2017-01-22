@@ -1,7 +1,10 @@
 package com.gbozza.android.popularmovies.models;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.gbozza.android.popularmovies.R;
 
 /**
  * Object representing a Movie, an entry from the MovieDB API
@@ -15,8 +18,6 @@ public class Movie implements Parcelable {
     private String voteAverage;
 
     private static final String MOVIEDB_POSTER_IMG_URL = "http://image.tmdb.org/t/p/";
-    private static final String MOVIEDB_POSTER_WIDHT_W185 = "w185";
-    private static final String MOVIEDB_POSTER_WIDHT_W342 = "w342";
 
     public Movie(int id, String posterPath, String overview, String originalTitle,
                  String popularity, String voteAverage) {
@@ -37,8 +38,9 @@ public class Movie implements Parcelable {
         voteAverage = parcel.readString();
     }
 
-    public String buildPosterPath() {
-        return MOVIEDB_POSTER_IMG_URL + MOVIEDB_POSTER_WIDHT_W342 + getPosterPath();
+    public String buildPosterPath(Context context) {
+        String posterWidth = context.getResources().getString(R.string.poster_size);
+        return MOVIEDB_POSTER_IMG_URL + posterWidth + getPosterPath();
     }
 
     @Override
