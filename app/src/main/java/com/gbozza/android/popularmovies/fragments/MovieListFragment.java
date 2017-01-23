@@ -46,6 +46,7 @@ public class MovieListFragment extends Fragment {
 
     private static final int SORTING_POPULAR = 1;
     private static final int SORTING_RATED = 2;
+    private static final String MOVIEDB_LANGUAGE = "en-US";
     private static final String BUNDLE_MOVIES_KEY = "movieList";
     private static final String BUNDLE_PAGE_KEY = "currentPage";
     private static final String BUNDLE_SORTING_KEY = "currentSorting";
@@ -66,14 +67,11 @@ public class MovieListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Boolean errorShown = false;
-        Log.d(TAG, "load?");
         if (savedInstanceState != null) {
             errorShown = savedInstanceState.getBoolean(BUNDLE_ERROR_KEY);
         }
-        Log.d(TAG, "onCreateView savedInstanceState is null? "+String.valueOf(savedInstanceState == null));
 
         if (savedInstanceState != null && !errorShown) {
-            Log.d(TAG, "load");
             mPage = savedInstanceState.getInt(BUNDLE_PAGE_KEY);
             mSorting = savedInstanceState.getInt(BUNDLE_SORTING_KEY);
         } else {
@@ -130,10 +128,8 @@ public class MovieListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Log.d(TAG, "save?");
         List<Movie> movieList = mMoviesAdapter.getMoviesData();
         if (movieList != null) {
-            Log.d(TAG, "save");
             ArrayList<Movie> movieArrayList = new ArrayList<>(mMoviesAdapter.getMoviesData());
             outState.putParcelableArrayList(BUNDLE_MOVIES_KEY, movieArrayList);
             outState.putInt(BUNDLE_PAGE_KEY, mPage);
@@ -192,7 +188,7 @@ public class MovieListFragment extends Fragment {
             String method = params[0][0];
             Map<String, String> mapping = new HashMap<>();
 
-            mapping.put(NetworkUtilities.getMoviedbLanguageQueryParam(), "en-UK");
+            mapping.put(NetworkUtilities.getMoviedbLanguageQueryParam(), MOVIEDB_LANGUAGE);
             mapping.put(NetworkUtilities.getMoviedbPageQueryParam(), String.valueOf(mPage));
 
             URL url = NetworkUtilities.buildUrl(method, mapping);

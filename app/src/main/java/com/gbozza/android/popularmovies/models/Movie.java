@@ -14,7 +14,7 @@ public class Movie implements Parcelable {
     private String posterPath;
     private String overview;
     private String originalTitle;
-    private String popularity;
+    private String releaseDate;
     private String voteAverage;
 
     private static final String MOVIEDB_POSTER_IMG_URL = "http://image.tmdb.org/t/p/";
@@ -25,7 +25,7 @@ public class Movie implements Parcelable {
         this.posterPath = posterPath;
         this.overview = overview;
         this.originalTitle = originalTitle;
-        this.popularity = popularity;
+        this.releaseDate = popularity;
         this.voteAverage = voteAverage;
     }
 
@@ -34,7 +34,7 @@ public class Movie implements Parcelable {
         posterPath = parcel.readString();
         overview = parcel.readString();
         originalTitle = parcel.readString();
-        popularity = parcel.readString();
+        releaseDate = parcel.readString();
         voteAverage = parcel.readString();
     }
 
@@ -54,7 +54,7 @@ public class Movie implements Parcelable {
         parcel.writeString(posterPath);
         parcel.writeString(overview);
         parcel.writeString(originalTitle);
-        parcel.writeString(popularity);
+        parcel.writeString(releaseDate);
         parcel.writeString(voteAverage);
     }
 
@@ -103,12 +103,12 @@ public class Movie implements Parcelable {
         this.originalTitle = originalTitle;
     }
 
-    public String getPopularity() {
-        return popularity;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setPopularity(String popularity) {
-        this.popularity = popularity;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public String getVoteAverage() {

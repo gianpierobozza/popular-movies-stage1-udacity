@@ -38,7 +38,7 @@ public final class MovieDbJsonUtilities {
         final String TMDB_R_ID = "id";
         final String TMDB_R_OVERVIEW = "overview";
         final String TMDB_R_ORIGINAL_TITLE = "original_title";
-        final String TMDB_R_POPULARITY = "popularity";
+        final String TMDB_R_RELEASE_DATE = "release_date";
         final String TMDB_R_VOTE_AVERAGE = "vote_average";
 
         List<Movie> parsedMoviesData;
@@ -84,7 +84,7 @@ public final class MovieDbJsonUtilities {
             posterPath = result.getString(TMDB_R_POSTER_PATH);
             overview = result.getString(TMDB_R_OVERVIEW);
             originalTitle = result.getString(TMDB_R_ORIGINAL_TITLE);
-            popularity = result.getString(TMDB_R_POPULARITY);
+            popularity = result.getString(TMDB_R_RELEASE_DATE);
             voteAverage = result.getString(TMDB_R_VOTE_AVERAGE);
 
             Movie movie = new Movie(id, posterPath, overview, originalTitle, popularity, voteAverage);
