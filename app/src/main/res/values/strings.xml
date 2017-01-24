@@ -3,6 +3,7 @@
 
     <string name="sort_popular">Most Popular</string>
     <string name="sort_rated">Top Rated</string>
+    <string name="poster_image_alt">Poster Image</string>
 
     <string name="error_message">An error has occurred. Please try again by swiping down</string>
     <string name="error_no_connectivity">Your device is not connected to the Internet, please check your connection and swipe down to refresh</string>

@@ -19,7 +19,7 @@
 
             <ImageView
                 android:id="@+id/iv_movie_poster"
-                android:contentDescription="Poster Image"
+                android:contentDescription="@string/poster_image_alt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

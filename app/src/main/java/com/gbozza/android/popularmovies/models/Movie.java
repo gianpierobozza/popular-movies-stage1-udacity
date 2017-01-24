@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import com.gbozza.android.popularmovies.R;
 
 /**
- * Object representing a Movie, an entry from the MovieDB API
+ * Object representing a Movie, an item from the MovieDB API
  */
 public class Movie implements Parcelable {
     private int id;
@@ -19,16 +19,31 @@ public class Movie implements Parcelable {
 
     private static final String MOVIEDB_POSTER_IMG_URL = "http://image.tmdb.org/t/p/";
 
+    /**
+     * Base constructor
+     *
+     * @param id the integer id of a movie
+     * @param posterPath the string containing the path of the image used as a poster
+     * @param overview the plot of the movie
+     * @param originalTitle the original title
+     * @param releaseDate a string containing the release date of the movie
+     * @param voteAverage a string representing the average vote for the movie
+     */
     public Movie(int id, String posterPath, String overview, String originalTitle,
-                 String popularity, String voteAverage) {
+                 String releaseDate, String voteAverage) {
         this.id = id;
         this.posterPath = posterPath;
         this.overview = overview;
         this.originalTitle = originalTitle;
-        this.releaseDate = popularity;
+        this.releaseDate = releaseDate;
         this.voteAverage = voteAverage;
     }
 
+    /**
+     * Constructor used by the save instance mechanism that handles a Parcel to achieve it
+     *
+     * @param parcel the object containing the movie data of the object we need to create
+     */
     private Movie(Parcel parcel) {
         id = parcel.readInt();
         posterPath = parcel.readString();
@@ -38,6 +53,12 @@ public class Movie implements Parcelable {
         voteAverage = parcel.readString();
     }
 
+    /**
+     * This method returns the complete poster path based on screen size
+     *
+     * @param context application context
+     * @return the path used by the Picasso library to display an image
+     */
     public String buildPosterPath(Context context) {
         String posterWidth = context.getResources().getString(R.string.poster_size);
         return MOVIEDB_POSTER_IMG_URL + posterWidth + getPosterPath();
@@ -70,6 +91,10 @@ public class Movie implements Parcelable {
         }
 
     };
+
+    /*
+     * Following getter and setter methods for the class properties
+     */
 
     public int getId() {
         return id;

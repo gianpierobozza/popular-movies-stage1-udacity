@@ -12,6 +12,7 @@
         android:padding="16dp"
         android:text="@string/error_message"
         android:drawableRight="@android:drawable/stat_notify_error"
+        android:drawableEnd="@android:drawable/stat_notify_error"
         android:drawableTint="@android:color/holo_red_dark"
         android:drawablePadding="4dp"
         android:textSize="20sp"

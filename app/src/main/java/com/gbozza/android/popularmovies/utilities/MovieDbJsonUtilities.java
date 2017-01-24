@@ -24,14 +24,18 @@ public final class MovieDbJsonUtilities {
 
     private static final String TAG = MovieDbJsonUtilities.class.getSimpleName();
 
+    /**
+     * The method that takes a JSONObject and converts it to a List of Movies
+     *
+     * @param popularMovies the JSONObject from the service
+     * @return a List<Movie> Object, a list containing Movie Objects
+     * @throws JSONException
+     */
     public static List<Movie> getPopularMoviesListFromJson(JSONObject popularMovies)
             throws JSONException {
 
         // root keys
-        final String TMDB_PAGE = "page";
         final String TMDB_RESULTS = "results";
-        final String TMDB_TOTAL_PAGES = "total_pages";
-        final String TMDB_TOTAL_RESULTS = "total_results";
 
         // "results" keys
         final String TMDB_R_POSTER_PATH = "poster_path";
@@ -43,24 +47,22 @@ public final class MovieDbJsonUtilities {
 
         List<Movie> parsedMoviesData;
 
-        /**
-         * Error codes management
-         */
+        // Error codes management
         if (popularMovies.has(TMDB_SUCCESS) && !popularMovies.getBoolean(TMDB_SUCCESS)) {
             int errorCode = popularMovies.getInt(TMDB_STATUS_CODE);
             String message = popularMovies.getString(TMDB_STATUS_MESSAGE);
 
             switch (errorCode) {
                 case TMDB_STATUS_INVALID_API_KEY:
-                    /* Invalid API key provided */
+                    // Invalid API key provided
                     Log.d(TAG, message);
                     return null;
                 case TMDB_STATUS_INVALID_RESOUCE:
-                    /* Invalid resource */
+                    // Invalid resource
                     Log.d(TAG, message);
                     return null;
                 default:
-                    /* Server probably down */
+                    // Server probably down
                     return null;
             }
         }
@@ -77,7 +79,7 @@ public final class MovieDbJsonUtilities {
             String popularity;
             String voteAverage;
 
-            /* Get the JSON object representing one movie result */
+            // Get the JSON object representing one movie result
             JSONObject result = resultsArray.getJSONObject(i);
 
             id = result.getInt(TMDB_R_ID);

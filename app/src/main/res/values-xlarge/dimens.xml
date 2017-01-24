@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_view_text_size">26sp</dimen>
+    <dimen name="movie_detail_text_size">30sp</dimen>
 
     <integer name="grid_columns">4</integer>
 </resources>

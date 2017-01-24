@@ -33,6 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A Class that extends Fragment to implement the Movie List structure
+ */
 public class MovieListFragment extends Fragment {
 
     private Context mContext;
@@ -53,9 +56,6 @@ public class MovieListFragment extends Fragment {
     private static final String BUNDLE_ERROR_KEY = "errorShown";
 
     private static final String TAG = MovieListFragment.class.getSimpleName();
-
-    public MovieListFragment() {
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,7 +107,7 @@ public class MovieListFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-                clearCardView();
+                clearGridView();
                 loadCards(mSorting);
             }
         });
@@ -141,6 +141,12 @@ public class MovieListFragment extends Fragment {
         }
     }
 
+    /**
+     * A method that invokes the AsyncTask to populate the RecyclerView,
+     * it's based on the sorting option selected by the user. Default is "most popular"
+     *
+     * @param sorting the way of sorting selected by the user
+     */
     public void loadCards(int sorting) {
         if (NetworkUtilities.isOnline(mContext)) {
             String method;
@@ -165,17 +171,28 @@ public class MovieListFragment extends Fragment {
         }
     }
 
-    public void clearCardView() {
+    /**
+     * Reset the GridView properties and adapter
+     */
+    public void clearGridView() {
         mScrollListener.resetState();
         mPage = 1;
         mMoviesAdapter.clear();
     }
 
+    /**
+     * Display the specific error message in the TextView
+     *
+     * @param messageId the resource id of the error string
+     */
     private void showErrorMessage(int messageId) {
         mErrorMessageDisplay.setText(getResources().getText(messageId));
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * The background worker that executes the calls to the MovieDB service
+     */
     public class FetchFromMovieDbTask extends AsyncTask<String[], Void, List<Movie>> {
         @Override
         protected void onPreExecute() {
@@ -243,7 +260,7 @@ public class MovieListFragment extends Fragment {
             if (!item.isChecked()) {
                 mSorting = item.getOrder();
                 item.setChecked(true);
-                clearCardView();
+                clearGridView();
                 loadCards(mSorting);
             }
             return true;

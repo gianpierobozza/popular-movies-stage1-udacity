@@ -14,29 +14,34 @@ import android.widget.TextView;
 import com.gbozza.android.popularmovies.models.Movie;
 import com.squareup.picasso.Picasso;
 
+/**
+ * Activity used to display Movie details, like release date, vote average, etc..
+ */
 public class MovieDetailActivity extends AppCompatActivity {
 
-    private final static String LABEL_RELEASE_VOTE_AVERAGE = "Vote Average: ";
-    private final static String LABEL_RELEASE_DATE_TEXT = "Release Date: ";
-    private final static String LABEL_OVERVIEW_TEXT = "Overview: ";
+    private final static String LABEL_TEXT_TITLE = "Title: ";
+    private final static String LABEL_TEXT_VOTE_AVERAGE = "Vote Average: ";
+    private final static String LABEL_TEXT_RELEASE_DATE = "Release Date: ";
+    private final static String LABEL_TEXT_OVERVIEW = "Overview: ";
 
     private static final String INTENT_MOVIE_KEY = "movieObject";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setHomeButtonEnabled(true);
-
-        setContentView(R.layout.activity_movie_detail);
-        ImageView moviePosterImageView = (ImageView) findViewById(R.id.iv_movie_detail_poster);
-        TextView movieTitleTextView = (TextView) findViewById(R.id.tv_movie_detail_title);
-        TextView movieVoteAverageTextView = (TextView) findViewById(R.id.tv_movie_detail_vote_average);
-        TextView movieReleaseDateTextView = (TextView) findViewById(R.id.tv_movie_detail_release_date);
-        TextView movieOverviewTextView = (TextView) findViewById(R.id.tv_movie_detail_overview);
-
         Intent parentIntent = getIntent();
         if (parentIntent != null) {
             if (parentIntent.hasExtra(INTENT_MOVIE_KEY)) {
+                getSupportActionBar().setHomeButtonEnabled(true);
+
+                setContentView(R.layout.activity_movie_detail);
+
+                ImageView moviePosterImageView = (ImageView) findViewById(R.id.iv_movie_detail_poster);
+                TextView movieTitleTextView = (TextView) findViewById(R.id.tv_movie_detail_title);
+                TextView movieVoteAverageTextView = (TextView) findViewById(R.id.tv_movie_detail_vote_average);
+                TextView movieReleaseDateTextView = (TextView) findViewById(R.id.tv_movie_detail_release_date);
+                TextView movieOverviewTextView = (TextView) findViewById(R.id.tv_movie_detail_overview);
+
                 Movie movie = getIntent().getExtras().getParcelable(INTENT_MOVIE_KEY);
 
                 Context context = getApplicationContext();
@@ -44,17 +49,25 @@ public class MovieDetailActivity extends AppCompatActivity {
                         .load(movie.buildPosterPath(context))
                         .into(moviePosterImageView);
 
-                movieTitleTextView.setText(movie.getOriginalTitle());
-                movieVoteAverageTextView.append(makeBold(LABEL_RELEASE_VOTE_AVERAGE));
+                movieTitleTextView.append(makeBold(LABEL_TEXT_TITLE));
+                movieTitleTextView.append(movie.getOriginalTitle());
+                movieVoteAverageTextView.append(makeBold(LABEL_TEXT_VOTE_AVERAGE));
                 movieVoteAverageTextView.append(movie.getVoteAverage());
-                movieReleaseDateTextView.append(makeBold(LABEL_RELEASE_DATE_TEXT));
+                movieReleaseDateTextView.append(makeBold(LABEL_TEXT_RELEASE_DATE));
                 movieReleaseDateTextView.append(movie.getReleaseDate());
-                movieOverviewTextView.append(makeBold(LABEL_OVERVIEW_TEXT));
+                movieOverviewTextView.append(makeBold(LABEL_TEXT_OVERVIEW));
                 movieOverviewTextView.append(movie.getOverview());
+
+                setTitle(movie.getOriginalTitle());
             }
         }
     }
 
+    /**
+     *
+     * @param string the text to be styled in bold
+     * @return the SpannabelString containing the bold text
+     */
     private SpannableString makeBold(String string) {
         SpannableString boldText = new SpannableString(string);
         boldText.setSpan(new StyleSpan(Typeface.BOLD), 0, boldText.length(), 0);

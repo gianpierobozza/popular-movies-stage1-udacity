@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" android:layout_margin="10dp">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -15,7 +16,7 @@
 
             <ImageView
                 android:id="@+id/iv_movie_detail_poster"
-                android:contentDescription="Poster Image"
+                android:contentDescription="@string/poster_image_alt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -31,28 +32,28 @@
                 android:paddingStart="10dp"
                 android:paddingTop="0dp"
                 android:paddingBottom="0dp"
-                android:textSize="20sp" />
+                android:textSize="@dimen/movie_detail_text_size" />
 
             <TextView
                 android:id="@+id/tv_movie_detail_vote_average"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_movie_detail_poster"
-                android:textSize="20sp" />
+                android:textSize="@dimen/movie_detail_text_size" />
 
             <TextView
                 android:id="@+id/tv_movie_detail_release_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_movie_detail_vote_average"
-                android:textSize="20sp" />
+                android:textSize="@dimen/movie_detail_text_size" />
 
             <TextView
                 android:id="@+id/tv_movie_detail_overview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_movie_detail_release_date"
-                android:textSize="20sp" />
+                android:textSize="@dimen/movie_detail_text_size" />
 
         </RelativeLayout>
 

@@ -26,12 +26,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
 
     private static final String INTENT_MOVIE_KEY = "movieObject";
 
+    /**
+     * Inner class to represent the ViewHolder for the Adapter
+     */
     class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
         final CardView mPopularMovieCardView;
         final ImageView mMoviePosterImageView;
         final TextView mMovieTitleTextView;
         Context mContext;
 
+        /**
+         * Constructor to the ViewHolder class
+         *
+         * @param view the we are going to inflate
+         */
         MoviesAdapterViewHolder(View view) {
             super(view);
             mPopularMovieCardView = (CardView) view.findViewById(R.id.cv_popular_movie);
@@ -80,6 +88,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         return mMovieList.size();
     }
 
+    /**
+     * Reset the Movie List, new search, for example
+     */
     public void clear() {
         if (mMovieList != null) {
             mMovieList.clear();
@@ -87,6 +98,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         }
     }
 
+    /**
+     * Setter method for the Movie List Object
+     *
+     * @param movieList the List containing Movie Objects
+     */
     public void setMoviesData(List<Movie> movieList) {
         if (null == mMovieList) {
             mMovieList = movieList;
@@ -96,6 +112,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         notifyDataSetChanged();
     }
 
+    /**
+     * Getter method for the Movie List Object
+     *
+     * @return the Movie List
+     */
     public List<Movie> getMoviesData() {
         return mMovieList;
     }

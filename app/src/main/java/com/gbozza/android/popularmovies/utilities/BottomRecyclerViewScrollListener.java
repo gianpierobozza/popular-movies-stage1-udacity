@@ -3,6 +3,9 @@ package com.gbozza.android.popularmovies.utilities;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+/**
+ * A Listener for the bottom scroll functionality of loading more data from the service
+ */
 public abstract class BottomRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     private int mVisibleThreshold = 3;
     private int mCurrentPage;
@@ -12,6 +15,12 @@ public abstract class BottomRecyclerViewScrollListener extends RecyclerView.OnSc
 
     private RecyclerView.LayoutManager mLayoutManager;
 
+    /**
+     * Constructor for the Class
+     *
+     * @param layoutManager the layout manager the RecyclerView is using
+     * @param page the page we're currently showing
+     */
     protected BottomRecyclerViewScrollListener(GridLayoutManager layoutManager, int page) {
         this.mLayoutManager = layoutManager;
         mVisibleThreshold = mVisibleThreshold * layoutManager.getSpanCount();
@@ -54,14 +63,22 @@ public abstract class BottomRecyclerViewScrollListener extends RecyclerView.OnSc
         }
     }
 
-    // Call this method whenever performing new searches
+    /**
+     * Called when performing new searches to reset the listener
+     */
     public void resetState() {
         this.mCurrentPage = this.mStartingPageIndex;
         this.mPreviousTotalItemCount = 0;
         this.mLoading = true;
     }
 
-    // Defines the process for actually loading more data based on page
+    /**
+     * Defines the process for actually loading more data based on page
+     *
+     * @param page the page we need to load
+     * @param totalItemsCount the total number of items
+     * @param view the view used
+     */
     public abstract void onLoadMore(int page, int totalItemsCount, RecyclerView view);
 
 }

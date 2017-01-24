@@ -30,6 +30,12 @@ public final class NetworkUtilities {
 
     private static final String TAG = NetworkUtilities.class.getSimpleName();
 
+    /**
+     * A method to check if the device has Internet Connectivity
+     *
+     * @param context application context
+     * @return true or false based on the the availability of connectivity
+     */
     public static boolean isOnline(Context context) {
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -94,16 +100,36 @@ public final class NetworkUtilities {
         }
     }
 
+    /**
+     * Getter method to get the Language query param value
+     *
+     * @return the Language query param value
+     */
     public static String getMoviedbLanguageQueryParam() { return MOVIEDB_LANGUAGE_QUERY_PARAM; }
 
+    /**
+     * Getter method to get the Page query param value
+     *
+     * @return the Page param value
+     */
     public static String getMoviedbPageQueryParam() {
         return MOVIEDB_PAGE_QUERY_PARAM;
     }
 
+    /**
+     * Getter method to get the Most Popular query param value
+     *
+     * @return the Most Popular param value
+     */
     public static String getMoviedbMethodPopular() {
         return MOVIEDB_METHOD_POPULAR;
     }
 
+    /**
+     * Getter method to get the Rated query param value
+     *
+     * @return the Rated param value
+     */
     public static String getMoviedbMethodRated() {
         return MOVIEDB_METHOD_RATED;
     }
