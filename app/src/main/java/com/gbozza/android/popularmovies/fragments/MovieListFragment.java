@@ -1,7 +1,7 @@
 package com.gbozza.android.popularmovies.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,35 +21,31 @@ import android.widget.TextView;
 import com.gbozza.android.popularmovies.R;
 import com.gbozza.android.popularmovies.adapters.MoviesAdapter;
 import com.gbozza.android.popularmovies.models.Movie;
+import com.gbozza.android.popularmovies.tasks.FetchFromMovieDbTask;
 import com.gbozza.android.popularmovies.utilities.BottomRecyclerViewScrollListener;
-import com.gbozza.android.popularmovies.utilities.MovieDbJsonUtilities;
 import com.gbozza.android.popularmovies.utilities.NetworkUtilities;
 
-import org.json.JSONObject;
-
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A Class that extends Fragment to implement the Movie List structure
  */
 public class MovieListFragment extends Fragment {
 
+    public static ProgressBar mLoadingIndicator;
+    public static TextView mErrorMessageDisplay;
+    public static SwipeRefreshLayout mSwipeContainer;
+    public static MoviesAdapter mMoviesAdapter;
+    public static final String MOVIEDB_LANGUAGE = "en-US";
+
     private Context mContext;
-    private MoviesAdapter mMoviesAdapter;
-    private ProgressBar mLoadingIndicator;
     private BottomRecyclerViewScrollListener mScrollListener;
-    private SwipeRefreshLayout mSwipeContainer;
-    private TextView mErrorMessageDisplay;
     private int mPage;
     private int mSorting;
 
     private static final int SORTING_POPULAR = 1;
     private static final int SORTING_RATED = 2;
-    private static final String MOVIEDB_LANGUAGE = "en-US";
     private static final String BUNDLE_MOVIES_KEY = "movieList";
     private static final String BUNDLE_PAGE_KEY = "currentPage";
     private static final String BUNDLE_SORTING_KEY = "currentSorting";
@@ -161,7 +157,7 @@ public class MovieListFragment extends Fragment {
                     method = NetworkUtilities.getMoviedbMethodPopular();
                     break;
             }
-            String[] posters = new String[]{method};
+            String[] posters = new String[]{method, String.valueOf(mPage)};
             new FetchFromMovieDbTask().execute(posters);
         } else {
             showErrorMessage(R.string.error_no_connectivity);
@@ -185,55 +181,9 @@ public class MovieListFragment extends Fragment {
      *
      * @param messageId the resource id of the error string
      */
-    private void showErrorMessage(int messageId) {
-        mErrorMessageDisplay.setText(getResources().getText(messageId));
+    public static void showErrorMessage(int messageId) {
+        mErrorMessageDisplay.setText(Resources.getSystem().getText(messageId));
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * The background worker that executes the calls to the MovieDB service
-     */
-    public class FetchFromMovieDbTask extends AsyncTask<String[], Void, List<Movie>> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mLoadingIndicator.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected List<Movie> doInBackground(String[]... params) {
-            String method = params[0][0];
-            Map<String, String> mapping = new HashMap<>();
-
-            mapping.put(NetworkUtilities.getMoviedbLanguageQueryParam(), MOVIEDB_LANGUAGE);
-            mapping.put(NetworkUtilities.getMoviedbPageQueryParam(), String.valueOf(mPage));
-
-            URL url = NetworkUtilities.buildUrl(method, mapping);
-
-            try {
-                String response = NetworkUtilities.getResponseFromHttpUrl(url);
-                Log.d(TAG, response);
-                JSONObject responseJson = new JSONObject(response);
-
-                return MovieDbJsonUtilities.getPopularMoviesListFromJson(responseJson);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<Movie> movieList) {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
-            if (movieList != null) {
-                mMoviesAdapter.setMoviesData(movieList);
-                mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-            } else {
-
-                showErrorMessage(R.string.error_moviedb_list);
-            }
-            mSwipeContainer.setRefreshing(false);
-        }
     }
 
     @Override

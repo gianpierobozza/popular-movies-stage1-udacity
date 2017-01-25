@@ -20,6 +20,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
+            <ProgressBar
+                android:id="@+id/pb_movie_detail_poster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_below="@+id/iv_movie_detail_poster"
+                android:layout_centerHorizontal="true" />
+
             <TextView
                 android:id="@+id/tv_movie_detail_title"
                 android:layout_width="wrap_content"
@@ -39,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_movie_detail_poster"
+                android:layout_marginTop="22dp"
                 android:textSize="@dimen/movie_detail_text_size" />
 
             <TextView
@@ -54,6 +63,18 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_movie_detail_release_date"
                 android:textSize="@dimen/movie_detail_text_size" />
+
+            <TextView
+                android:id="@+id/tv_movie_detail_poster_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_movie_detail_overview"
+                android:layout_margin="30dp"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/card_view_text_size"
+                android:text="@string/error_movie_poster"
+                android:textAlignment="center"
+                android:visibility="invisible" />
 
         </RelativeLayout>
 

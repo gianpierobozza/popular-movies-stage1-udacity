@@ -8,10 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gbozza.android.popularmovies.models.Movie;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -37,17 +40,31 @@ public class MovieDetailActivity extends AppCompatActivity {
                 setContentView(R.layout.activity_movie_detail);
 
                 ImageView moviePosterImageView = (ImageView) findViewById(R.id.iv_movie_detail_poster);
+                final ProgressBar moviePosterProgressBar = (ProgressBar) findViewById(R.id.pb_movie_detail_poster);
                 TextView movieTitleTextView = (TextView) findViewById(R.id.tv_movie_detail_title);
                 TextView movieVoteAverageTextView = (TextView) findViewById(R.id.tv_movie_detail_vote_average);
                 TextView movieReleaseDateTextView = (TextView) findViewById(R.id.tv_movie_detail_release_date);
                 TextView movieOverviewTextView = (TextView) findViewById(R.id.tv_movie_detail_overview);
+                final TextView moviePosterErrorTextView = (TextView) findViewById(R.id.tv_movie_detail_poster_error);
 
                 Movie movie = getIntent().getExtras().getParcelable(INTENT_MOVIE_KEY);
 
                 Context context = getApplicationContext();
                 Picasso.with(context)
                         .load(movie.buildPosterPath(context))
-                        .into(moviePosterImageView);
+                        .into(moviePosterImageView, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                moviePosterProgressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                moviePosterProgressBar.setVisibility(View.GONE);
+                                moviePosterErrorTextView.setRotation(-20);
+                                moviePosterErrorTextView.setVisibility(View.VISIBLE);
+                            }
+                        });
 
                 movieTitleTextView.append(makeBold(LABEL_TEXT_TITLE));
                 movieTitleTextView.append(movie.getOriginalTitle());

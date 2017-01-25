@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gbozza.android.popularmovies.MovieDetailActivity;
 import com.gbozza.android.popularmovies.R;
 import com.gbozza.android.popularmovies.models.Movie;
+import com.gbozza.android.popularmovies.utilities.MoviePosterCallback;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -29,9 +31,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
     /**
      * Inner class to represent the ViewHolder for the Adapter
      */
-    class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
+    public class MoviesAdapterViewHolder extends RecyclerView.ViewHolder {
         final CardView mPopularMovieCardView;
         final ImageView mMoviePosterImageView;
+        public ProgressBar mMoviePosterProgressBar;
+        public TextView mMoviePosterErrorTextView;
         final TextView mMovieTitleTextView;
         Context mContext;
 
@@ -44,6 +48,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
             super(view);
             mPopularMovieCardView = (CardView) view.findViewById(R.id.cv_popular_movie);
             mMoviePosterImageView = (ImageView) view.findViewById(R.id.iv_movie_poster);
+            mMoviePosterProgressBar = (ProgressBar) view.findViewById(R.id.pb_movie_poster);
+            mMoviePosterErrorTextView = (TextView) view.findViewById(R.id.tv_movie_poster_error);
             mMovieTitleTextView = (TextView) view.findViewById(R.id.tv_movie_title);
             mContext = view.getContext();
         }
@@ -65,7 +71,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MoviesAdap
         Movie movie = mMovieList.get(position);
         Picasso.with(moviesAdapterViewHolder.mContext)
                 .load(movie.buildPosterPath(moviesAdapterViewHolder.mContext))
-                .into(moviesAdapterViewHolder.mMoviePosterImageView);
+                .into(moviesAdapterViewHolder.mMoviePosterImageView, new MoviePosterCallback(moviesAdapterViewHolder));
         moviesAdapterViewHolder.mMovieTitleTextView.setText(movie.getOriginalTitle());
 
         moviesAdapterViewHolder.mPopularMovieCardView.setTag(R.id.card_view_item, position);
